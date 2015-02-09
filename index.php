@@ -2,8 +2,6 @@
 // Version
 define('VERSION', '1.5.6');
 
-print "Naman";
-
 /* Testing non-beta */
 
 // Configuration
