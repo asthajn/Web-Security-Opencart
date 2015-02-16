@@ -211,7 +211,6 @@ if (isset($this->request->get['customer_id'])) {
 					}
 					
 					$data['xaxis'][] = array($i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
-$data['yaxis'] = $i;
 				}					
 				break;
 			case 'week':
@@ -229,7 +228,6 @@ $data['yaxis'] = $i;
 					}
 				
 					$data['xaxis'][] = array($i, date('D', strtotime($date)));
-$data['yaxis'] = $i;
 				}
 				
 				break;
@@ -238,7 +236,7 @@ $data['yaxis'] = $i;
 				for ($i = 1; $i <= date('t'); $i++) {
 					$date = date('Y') . '-' . date('m') . '-' . $i;
 					
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = '" . $this->db->escape($date) . "') GROUP BY DAY(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = '" . $this->db->escape($date) . "') AND customer_id = '".$cust."' GROUP BY DAY(date_added)");
 					
 					if ($query->num_rows) {
 						$data['orders']['data'][] = array($i, (int)$query->row['total']);
@@ -248,7 +246,6 @@ $data['yaxis'] = $i;
 				
 								
 					$data['xaxis'][] = array($i, date('j', strtotime($date)));
-					$data['yaxis'] = $i;
 				}
 				break;
 			case 'year':
@@ -264,11 +261,10 @@ $data['yaxis'] = $i;
 					}
 					
 				$data['xaxis'][] = array($i, date('M', mktime(0, 0, 0, $i, 1, date('Y'))));
-$data['yaxis'] = $i;
 				}			
 				break;	
 		} 
-
+$data['yaxis'] = range(0,35);
 		$this->response->setOutput(json_encode($data));
 	}
 	// Chart ended

@@ -69,19 +69,19 @@
         </tbody>
       </table>
 <!-- Added by Astha -->
-<div class="statistic" >
+<div class="statistic" style="margin:auto; width:50%; float:none;">
         <div class="range"><?php echo $entry_range; ?>
           <select id="range" onchange="getSalesChart(this.value,'<?php echo $cust_id; ?>')">
 <option value="default"><?php echo $text_default; ?></option>
             <option value="day"><?php echo $text_day; ?></option>
             <option value="week"><?php echo $text_week; ?></option>
-<option value="month"><?php echo $text_month; ?></option>
-             <option value="year"><?php echo $text_year; ?></option>
+	    <option value="month"><?php echo $text_month; ?></option>
+            <option value="year"><?php echo $text_year; ?></option>
           </select>
         </div>
         <div class="dashboard-heading"><?php echo $text_statistics; ?></div>
         <div class="dashboard-content">
-          <div id="report" style="width: 390px; height: 170px; margin: auto;"></div>
+          <div id="report" style="width: 390px; height: 300px; margin: auto;"></div>
         </div>
       </div><!-- -->
       <div class="pagination"><?php echo $pagination; ?></div>
