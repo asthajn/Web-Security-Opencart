@@ -113,6 +113,7 @@ $this->data['cust_id'] = $cust_id;
 		$this->data['text_all_status'] = $this->language->get('text_all_status');
 		$this->data['text_week'] = "This Week";
 $this->data['text_day'] = "This Day";
+$this->data['text_month'] = "This Month";
 $this->data['text_default'] = "Select range";
 $this->data['text_year'] = "This Year";
 $this->data['entry_range'] = "Range";
@@ -176,7 +177,6 @@ $this->data['text_statistics'] = "Customer Statistics";
 // Added by Astha 
 public function chart() {
 		$this->language->load('common/home');
-		
 		$data = array();
 		
 		$data['order'] = array();
@@ -196,22 +196,22 @@ if (isset($this->request->get['customer_id'])) {
 		if (isset($this->request->get['range'])) {
 			$range = $this->request->get['range'];
 		} else {
-			$range = 'year';
+			$range = 'week';
 		}
-		$range = 'year';
+		
 		switch ($range) {
 			case 'day':
 				for ($i = 0; $i < 24; $i++) {
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '" . (int)$this->config->get('config_complete_status_id') . "' AND (DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "') AND customer_id = '".$cust."' GROUP BY HOUR(date_added) ORDER BY date_added ASC");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "') AND customer_id = '".$cust."' GROUP BY HOUR(date_added) ORDER BY date_added ASC");
 					
 					if ($query->num_rows) {
-						$data['order']['data'][]  = array($i, (int)$query->row['total']);
+						$data['orders']['data'][]  = array($i, (int)$query->row['total']);
 					} else {
-						$data['order']['data'][]  = array($i, 0);
+						$data['orders']['data'][]  = array($i, 0);
 					}
 					
-					
 					$data['xaxis'][] = array($i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
+$data['yaxis'] = $i;
 				}					
 				break;
 			case 'week':
@@ -220,15 +220,16 @@ if (isset($this->request->get['customer_id'])) {
 				for ($i = 0; $i < 7; $i++) {
 					$date = date('Y-m-d', $date_start + ($i * 86400));
 
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '" . (int)$this->config->get('config_complete_status_id') . "' AND DATE(date_added) = '" . $this->db->escape($date) . "' AND customer_id = '".$cust."' GROUP BY DATE(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' AND customer_id = '".$cust."' GROUP BY DATE(date_added)");
 			
 					if ($query->num_rows) {
-						$data['order']['data'][] = array($i, (int)$query->row['total']);
+						$data['orders']['data'][] = array($i, (int)$query->row['total']);
 					} else {
-						$data['order']['data'][] = array($i, 0);
+						$data['orders']['data'][] = array($i, 0);
 					}
 				
 					$data['xaxis'][] = array($i, date('D', strtotime($date)));
+$data['yaxis'] = $i;
 				}
 				
 				break;
@@ -237,22 +238,23 @@ if (isset($this->request->get['customer_id'])) {
 				for ($i = 1; $i <= date('t'); $i++) {
 					$date = date('Y') . '-' . date('m') . '-' . $i;
 					
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '" . (int)$this->config->get('config_complete_status_id') . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') AND customer_id = '".$cust."' GROUP BY DAY(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = '" . $this->db->escape($date) . "') GROUP BY DAY(date_added)");
 					
 					if ($query->num_rows) {
-						$data['order']['data'][] = array($i, (int)$query->row['total']);
+						$data['orders']['data'][] = array($i, (int)$query->row['total']);
 					} else {
-						$data['order']['data'][] = array($i, 0);
+						$data['orders']['data'][] = array($i, 0);
 					}	
 				
 								
 					$data['xaxis'][] = array($i, date('j', strtotime($date)));
+					$data['yaxis'] = $i;
 				}
 				break;
 			case 'year':
 				for ($i = 1; $i <= 12; $i++) {
-					//$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '" . (int)$this->config->get('config_complete_status_id') . "' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
-$query = $this->db->query("select count(*) as total from oc_order where MONTH(date_added) = '" . $i . "' AND customer_id = '".$cust."' group by MONTH(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' AND customer_id = '".$cust."' GROUP BY MONTH(date_added)");
+//$query = $this->db->query("select count(*) as total from oc_order where MONTH(date_added) = '" . $i . "' AND customer_id = '".$cust."' group by MONTH(date_added)");order_status_id > '" . (int)$this->config->get('config_complete_status_id') . "' AND 
 
 					if ($query->num_rows) {
 						$data['orders']['data'][] = array($i, (int)$query->row['total']);
@@ -267,14 +269,6 @@ $data['yaxis'] = $i;
 				break;	
 		} 
 
-
-		//$data['orders']['data'] = array(array(1,2),array(2,4),array(3,4),array(4,5),array(5,2));
-/*foreach ($data['orders'] as $test){
-print $test;
-}
-*/
-
-		//$data['months']['data'] = array(array(1,1),array(2,2),array(3,3),array(4,4),array(5,5));
 		$this->response->setOutput(json_encode($data));
 	}
 	// Chart ended
