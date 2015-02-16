@@ -50,7 +50,8 @@ class ControllerCheckoutCheckout extends Controller {
       	);
 					
 	    $this->data['heading_title'] = $this->language->get('heading_title');
-		
+//Added by Astha for referrer
+$this->data['referee_id'] = $this->language->get('referee_id');
 		$this->data['text_checkout_option'] = $this->language->get('text_checkout_option');
 		$this->data['text_checkout_account'] = $this->language->get('text_checkout_account');
 		$this->data['text_checkout_payment_address'] = $this->language->get('text_checkout_payment_address');
@@ -84,7 +85,7 @@ class ControllerCheckoutCheckout extends Controller {
 				
 		$this->response->setOutput($this->render());
   	}
-	
+
 	public function country() {
 		$json = array();
 		

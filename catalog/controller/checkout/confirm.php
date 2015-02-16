@@ -2,7 +2,8 @@
 class ControllerCheckoutConfirm extends Controller { 
 	public function index() {
 		$redirect = '';
-		
+		//Added by Astha for referrer
+$this->data['referee_id'] = 'Referee';
 		if ($this->cart->hasShipping()) {
 			// Validate if shipping address has been set.		
 			$this->load->model('account/address');
@@ -124,6 +125,7 @@ class ControllerCheckoutConfirm extends Controller {
 				$data['telephone'] = $this->customer->getTelephone();
 				$data['fax'] = $this->customer->getFax();
 			
+
 				$this->load->model('account/address');
 				
 				$payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
@@ -138,7 +140,7 @@ class ControllerCheckoutConfirm extends Controller {
 				
 				$payment_address = $this->session->data['guest']['payment'];
 			}
-			
+			//$data['referrer_id'] = $this->session->data['referrer_id'];
 			$data['payment_firstname'] = $payment_address['firstname'];
 			$data['payment_lastname'] = $payment_address['lastname'];	
 			$data['payment_company'] = $payment_address['company'];	
@@ -159,7 +161,17 @@ class ControllerCheckoutConfirm extends Controller {
 			} else {
 				$data['payment_method'] = '';
 			}
-			
+
+		/* Astha Added for referrer */
+if (isset($this->session->data['referrer_id'])) {
+//print "Astha is writing this ";
+				$data['referrer_id'] = $this->session->data['referrer_id'];
+			} else {
+				$data['referrer_id']= 'ASTHA';
+			}
+/******/
+
+	
 			if (isset($this->session->data['payment_method']['code'])) {
 				$data['payment_code'] = $this->session->data['payment_method']['code'];
 			} else {
@@ -324,7 +336,8 @@ class ControllerCheckoutConfirm extends Controller {
 			}
 						
 			$this->load->model('checkout/order');
-			
+/* Astha */
+			//$data['referrer_id'] = $this->session->data['referrer_id'];
 			$this->session->data['order_id'] = $this->model_checkout_order->addOrder($data);
 			
 			$this->data['column_name'] = $this->language->get('column_name');

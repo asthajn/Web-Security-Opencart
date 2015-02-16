@@ -3,7 +3,7 @@ class ModelCatalogProduct extends Model {
 	public function updateViewed($product_id) {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
-	
+/* returns product details */
 	public function getProduct($product_id) {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
@@ -329,7 +329,7 @@ class ModelCatalogProduct extends Model {
 			
 			$query = $this->db->query("SELECT op.product_id, COUNT(*) AS total FROM " . DB_PREFIX . "order_product op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) LEFT JOIN `" . DB_PREFIX . "product` p ON (op.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE o.order_status_id > '0' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit);
 			
-			foreach ($query->rows as $result) { 		
+			foreach ($query->rows as $result) { 	
 				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 			}
 			
@@ -434,6 +434,7 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 	
+/* Commented by Astha -----------------------------------------------*/
 	public function getProductRelated($product_id) {
 		$product_data = array();
 
@@ -446,6 +447,20 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 		
+
+/* Added by Astha 
+public function getProductRelated($product_id) {
+		$product_data = array();
+
+		$query = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p.product_id IN (SELECT a.product_id FROM " . DB_PREFIX . "product_to_category a WHERE a.category_id IN (SELECT o.category_id FROM " . DB_PREFIX . "product_to_category o WHERE o.product_id = '" . (int)$product_id . "')) ORDER BY p.viewed DESC LIMIT 5");
+		
+		foreach ($query->rows as $result) { 
+			$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+		}
+		
+		return $product_data;
+	}
+ ******************************************************* */
 	public function getProductLayoutId($product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
 		
@@ -460,8 +475,39 @@ class ModelCatalogProduct extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
 		
 		return $query->rows;
-	}	
+	}
+/* Added by Astha you might also like */
+
+public function youmightlike($product_id) {
+$product_data = array();
 		
+$query = $this->db->query("select product_id, count(product_id) from oc_order_product where product_id IN (SELECT a.product_id FROM oc_product_to_category a WHERE a.category_id IN (SELECT o.category_id FROM oc_product_to_category o WHERE o.product_id = '".(int)$product_id."' ) AND a.product_id <> '".(int)$product_id."') GROUP BY product_id HAVING count(product_id)>0 ORDER BY count(product_id) DESC LIMIT 5;");
+
+
+$over = $this->db->query("SELECT FOUND_ROWS()");
+foreach ($over->rows as $result){
+$a = $result['FOUND_ROWS()'];
+//print $result['FOUND_ROWS()'];
+
+}
+
+$left = 5 - $a;
+//print "Left is :" .$left;
+
+foreach ($query->rows as $result) { 
+	$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+}
+
+$query = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p.product_id IN (SELECT a.product_id FROM " . DB_PREFIX . "product_to_category a WHERE a.category_id IN (SELECT o.category_id FROM " . DB_PREFIX . "product_to_category o WHERE o.product_id = '" . (int)$product_id . "')) AND p.product_id <> '". (int)$product_id."' ORDER BY p.viewed DESC LIMIT " .(int)$left );
+
+foreach ($query->rows as $result) { 
+	$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+}
+
+	return $product_data;
+	}
+/* ------------------*/	
+
 	public function getTotalProducts($data = array()) {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();

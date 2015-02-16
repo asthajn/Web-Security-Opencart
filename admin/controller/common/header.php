@@ -87,6 +87,9 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_return_reason'] = $this->language->get('text_return_reason');
 		$this->data['text_return_status'] = $this->language->get('text_return_status');
 		$this->data['text_support'] = $this->language->get('text_support');
+
+//Astha
+$this->data['text_referee'] = 'Referrer';
 		$this->data['text_shipping'] = $this->language->get('text_shipping');
 		$this->data['text_setting'] = $this->language->get('text_setting');
 		$this->data['text_stock_status'] = $this->language->get('text_stock_status');
@@ -210,7 +213,8 @@ class ControllerCommonHeader extends Controller {
             $this->data['openbay_link_play']                = $this->url->link('openbay/play', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['openbay_link_play_settings']       = $this->url->link('openbay/play/settings', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['openbay_link_play_report_price']   = $this->url->link('play/product/pricingReport', 'token=' . $this->session->data['token'], 'SSL');
-
+//Astha
+$this->data['referee'] = $this->url->link('sale/referee', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['openbay_markets'] = array(
                 'ebay' => $this->config->get('openbay_status'),
                 'amazon' => $this->config->get('amazon_status'),

@@ -401,6 +401,7 @@ class ControllerSaleCustomer extends Controller {
 			'order'                    => $order,
 			'start'                    => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                    => $this->config->get('config_admin_limit')
+
 		);
 		
 		$customer_total = $this->model_sale_customer->getTotalCustomers($data);
@@ -414,7 +415,7 @@ class ControllerSaleCustomer extends Controller {
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
 			);
-			
+/* Added by Astha href */			
 			$this->data['customers'][] = array(
 				'customer_id'    => $result['customer_id'],
 				'name'           => $result['name'],
@@ -425,7 +426,8 @@ class ControllerSaleCustomer extends Controller {
 				'ip'             => $result['ip'],
 				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
-				'action'         => $action
+				'action'         => $action,
+'href1'		=>$this->url->link('report/customer_data', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
 			);
 		}	
 					
@@ -1081,6 +1083,7 @@ class ControllerSaleCustomer extends Controller {
 			if ($store_info) {
 				$this->redirect($store_info['url'] . 'index.php?route=account/login&token=' . $token);
 			} else { 
+
 				$this->redirect(HTTP_CATALOG . 'index.php?route=account/login&token=' . $token);
 			}
 		} else {
@@ -1414,5 +1417,25 @@ class ControllerSaleCustomer extends Controller {
 
 		$this->response->setOutput(json_encode($json));		
 	}
+
+public function Download(){
+
+header('Content-Type: text/csv; charset=utf-8');
+header('Content-Disposition: attachment; filename=data.csv');
+
+$output = fopen("output.csv", 'w');
+
+fputcsv($output, array('Referrer' , 'Order ID','Customer ID', 'Customer', 'E-mail'));
+
+$query = $this->db->query("SELECT referrer_id, order_id, customer_id , CONCAT(firstname, ' ',lastname) AS customer , email from oc_order");
+
+//while ($row = mysql_fetch_assoc($rows)) fputcsv($output, $row);
+foreach ($query->rows as $result){
+fputcsv($output, $result);
+}
+
+echo "Download Completed. Check your default folder";	
+}
+
 }
 ?>

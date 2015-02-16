@@ -18,6 +18,11 @@
 </table>
 <br />
 <?php } ?>
+<!-- Added by Astha -->
+<div>
+<div class="checkout-heading"><?php echo $referee_id; ?></div>
+     <input type="text" name="referrer_id" value="" class="large-field" />
+</div>
 <b><?php echo $text_comments; ?></b>
 <textarea name="comment" rows="8" style="width: 98%;"><?php echo $comment; ?></textarea>
 <br />

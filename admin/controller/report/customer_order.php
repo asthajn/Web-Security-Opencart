@@ -76,7 +76,14 @@ class ControllerReportCustomerOrder extends Controller {
 		$customer_total = $this->model_report_customer->getTotalOrders($data); 
 		
 		$results = $this->model_report_customer->getOrders($data);
-		
+
+$max_referrer = $this->model_report_customer->getReferrer();
+$max_cust = $this->model_report_customer->getMaxCust();
+
+print "The Best customer is : ".$max_cust;
+print "The Best referrer is : ".$max_referrer;
+
+	
 		foreach ($results as $result) {
 			$action = array();
 		
@@ -84,7 +91,7 @@ class ControllerReportCustomerOrder extends Controller {
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
 			);
-						
+			//$this->data['customer_order1'] = $this->url->link('report/customer_data', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id']. $url, 'SSL');			
 			$this->data['customers'][] = array(
 				'customer'       => $result['customer'],
 				'email'          => $result['email'],
@@ -93,10 +100,12 @@ class ControllerReportCustomerOrder extends Controller {
 				'orders'         => $result['orders'],
 				'products'       => $result['products'],
 				'total'          => $this->currency->format($result['total'], $this->config->get('config_currency')),
-				'action'         => $action
+				'action'         => $action,
+'href1'		=>$this->url->link('report/customer_data/', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
 			);
 		}
 		 
+//$this->data['customer_order1'] = $this->url->link('report/customer_data', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id']. $url, 'SSL');	
  		$this->data['heading_title'] = $this->language->get('heading_title');
 		 
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
@@ -158,5 +167,6 @@ class ControllerReportCustomerOrder extends Controller {
 				
 		$this->response->setOutput($this->render());
 	}
+
 }
 ?>

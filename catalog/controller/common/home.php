@@ -20,7 +20,7 @@ class ControllerCommonHome extends Controller {
 			'common/footer',
 			'common/header'
 		);
-										
+								
 		$this->response->setOutput($this->render());
 	}
 }

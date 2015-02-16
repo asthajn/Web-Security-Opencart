@@ -10,7 +10,18 @@
     <div id="checkout">
       <div class="checkout-heading"><?php echo $text_checkout_option; ?></div>
       <div class="checkout-content"></div>
+  
     </div>
+<!-- Added by Astha 
+
+ <div id="checkout">
+    <div class="checkout-heading"><?php echo $referee_id; ?></div>
+     <input type="text" name="referrer_id" value="" class="large-field" />
+  <br />
+  <br />
+  </div>
+ ------------------ -->
+
     <?php if (!$logged) { ?>
     <div id="payment-address">
       <div class="checkout-heading"><span><?php echo $text_checkout_account; ?></span></div>
@@ -882,12 +893,12 @@ $('#button-shipping-method').live('click', function() {
 		}
 	});	
 });
-
+//added payment-method input test by Astha
 $('#button-payment-method').live('click', function() {
 	$.ajax({
 		url: 'index.php?route=checkout/payment_method/validate', 
 		type: 'post',
-		data: $('#payment-method input[type=\'radio\']:checked, #payment-method input[type=\'checkbox\']:checked, #payment-method textarea'),
+		data: $('#payment-method input[type=\'radio\']:checked, #payment-method input[type=\'checkbox\']:checked, #payment-method textarea ,#payment-method input[type=\'text\']'),
 		dataType: 'json',
 		beforeSend: function() {
 			$('#button-payment-method').attr('disabled', true);

@@ -112,7 +112,11 @@ class Customer {
 		$this->customer_group_id = '';
 		$this->address_id = '';
   	}
-  
+  /* Added by Astha */
+public function getReferrer(){
+return $this->referrer_id;
+}
+/***********/
   	public function isLogged() {
     	return $this->customer_id;
   	}

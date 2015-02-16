@@ -1,8 +1,10 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost/opencart/');
+//define('HTTP_SERVER', 'http://localhost/opencart/');
+define('HTTP_SERVER', '');
 
 // HTTPS
+//define('HTTPS_SERVER', 'http://localhost/opencart/');
 define('HTTPS_SERVER', 'http://localhost/opencart/');
 
 // DIR

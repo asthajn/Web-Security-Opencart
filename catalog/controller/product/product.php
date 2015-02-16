@@ -436,6 +436,8 @@ class ControllerProductProduct extends Controller {
 					'reviews'    => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 					'href'    	 => $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				);
+
+
 			}	
 			
 			$this->data['tags'] = array();
@@ -455,6 +457,52 @@ class ControllerProductProduct extends Controller {
             $this->data['profiles'] = $this->model_catalog_product->getProfiles($product_info['product_id']);
 			
 			$this->model_catalog_product->updateViewed($this->request->get['product_id']);
+/* Added by Astha You may also like */
+
+//print "Astha is here ";
+$result2 = $this->model_catalog_product->youmightlike($this->request->get['product_id']);
+$this->data['products_list'] = array();
+/** Added by Astha ***************** */
+foreach ($result2 as $result) {
+//if($result['product_id'] != $this->request->get['product_id']){
+if ($result['image']) {
+					$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
+				} else {
+					$image = false;
+				}
+				
+				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+				} else {
+					$price = false;
+				}
+						
+				if ((float)$result['special']) {
+					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+				} else {
+					$special = false;
+				}
+				
+				if ($this->config->get('config_review_status')) {
+					$rating = (int)$result['rating'];
+				} else {
+					$rating = false;
+				}
+$this->data['products_list'][] = array(
+					'product_id' => $result['product_id'],
+					'thumb'   	 => $image,
+					'name'    	 => $result['name'],
+					'price'   	 => $price,
+					'special' 	 => $special,
+					'rating'     => $rating,
+					'reviews'    => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
+					'href'    	 => $this->url->link('product/product', 'product_id=' . $result['product_id'])
+				);
+/* *********************** */
+//}
+}
+//print "\n Product is model :" .$products_list;
+/* --------------- */
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/product/product.tpl';

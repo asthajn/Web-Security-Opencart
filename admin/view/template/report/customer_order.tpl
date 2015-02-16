@@ -33,6 +33,7 @@
       <table class="list">
         <thead>
           <tr>
+
             <td class="left"><?php echo $column_customer; ?></td>
             <td class="left"><?php echo $column_email; ?></td>
             <td class="left"><?php echo $column_customer_group; ?></td>
@@ -47,7 +48,8 @@
           <?php if ($customers) { ?>
           <?php foreach ($customers as $customer) { ?>
           <tr>
-            <td class="left"><?php echo $customer['customer']; ?></td>
+<td class="left"><a href="<?php echo $customer['href1'] ;?>"><?php echo $customer['customer']; ?></td>
+            <!--<td class="left"><?php echo $customer['customer']; ?></td> -->
             <td class="left"><?php echo $customer['email']; ?></td>
             <td class="left"><?php echo $customer['customer_group']; ?></td>
             <td class="left"><?php echo $customer['status']; ?></td>
@@ -64,8 +66,15 @@
             <td class="center" colspan="8"><?php echo $text_no_results; ?></td>
           </tr>
           <?php } ?>
+
         </tbody>
       </table>
+<div><a onclick="bestref();" class="button"><?php echo "BEST REFERRER"; ?></a></div>
+<h2 id='ajaxDiv' style="display:none;overflow:auto"><div class="ref_text" style="float:left;margin:4px;padding:4px;border: 2px solid #EEE;font-size:1.2em;color:red;"></div> <div style="clear:both"></div> </h2> 
+
+<div><a onclick="bestref2();" class="button" style="margin-top:4px"><?php echo "BEST CUSTOMER"; ?></a></div>
+<h2 id='ajaxDiv2' style="display:none;overflow:auto"><div class="ref_text" style="float:left;margin:4px;padding:4px;border: 2px solid #EEE;font-size:1.2em;color:red;"></div> <div style="clear:both"></div> </h2> 
+
       <div class="pagination"><?php echo $pagination; ?></div>
     </div>
   </div>
@@ -95,6 +104,48 @@ function filter() {
 	location = url;
 }
 //--></script> 
+
+<script type="text/javascript"><!--
+function bestref() {
+	
+var url = 'index.php?route=report/best_referee/getReferrer&token=<?php echo $token; ?>';	
+
+$('#ajaxDiv').hide();
+$('#ajaxDiv2').slideUp('slow');
+$.ajax({
+			url: url,
+			
+			success: function(data) {
+				$('#ajaxDiv .ref_text').text("The best Referrer is "+data);
+				$('#ajaxDiv').slideDown('slow');
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});	
+}
+//--></script> 
+
+<script type="text/javascript"><!--
+function bestref2() {
+	
+var url = 'index.php?route=report/best_referee/getMaxCust&token=<?php echo $token; ?>';	
+
+$('#ajaxDiv2').hide();
+$('#ajaxDiv').slideUp('slow');
+$.ajax({
+			url: url,
+			success: function(data) {
+				$('#ajaxDiv2 .ref_text').text("The best Customer is "+data);
+				$('#ajaxDiv2').slideDown('slow');
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});	
+}
+//--></script> 
+
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#date-start').datepicker({dateFormat: 'yy-mm-dd'});

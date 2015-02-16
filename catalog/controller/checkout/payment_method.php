@@ -4,7 +4,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 		$this->language->load('checkout/checkout');
 		
 		$this->load->model('account/address');
-		
+		$this->data['referee_id'] = 'Referee';
 		if ($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {
 			$payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);		
 		} elseif (isset($this->session->data['guest'])) {
@@ -83,6 +83,14 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
    
+		/* Astha Added for referrer */
+if (isset($this->session->data['referrer_id'])) {
+//print "Astha is writing this ";
+				$data['referrer_id'] = $this->session->data['referrer_id'];
+			} else {
+				$data['referrer_id']= 'ASTHA';
+			}
+/******/
 		if (empty($this->session->data['payment_methods'])) {
 			$this->data['error_warning'] = sprintf($this->language->get('error_no_payment'), $this->url->link('information/contact'));
 		} else {
@@ -199,6 +207,8 @@ class ControllerCheckoutPaymentMethod extends Controller {
 				$this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
 			  
 				$this->session->data['comment'] = strip_tags($this->request->post['comment']);
+//Added by Astha for referrer_id 
+$this->session->data['referrer_id'] = $this->request->post['referrer_id'] ;
 			}							
 		}
 		

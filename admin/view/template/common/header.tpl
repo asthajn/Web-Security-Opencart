@@ -147,6 +147,8 @@ $(document).ready(function(){
               <li><a href="<?php echo $customer_ban_ip; ?>"><?php echo $text_customer_ban_ip; ?></a></li>
             </ul>
           </li>
+<!-- Astha -->
+<li><a href ="<?php echo $referee; ?>"><?php echo $text_referee; ?></a></li>
           <li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
           <li><a href="<?php echo $coupon; ?>"><?php echo $text_coupon; ?></a></li>
           <li><a class="parent"><?php echo $text_voucher; ?></a>
@@ -237,6 +239,7 @@ $(document).ready(function(){
               <li><a href="<?php echo $report_customer_credit; ?>"><?php echo $text_report_customer_credit; ?></a></li>
             </ul>
           </li>
+
           <li><a class="parent"><?php echo $text_affiliate; ?></a>
             <ul>
               <li><a href="<?php echo $report_affiliate_commission; ?>"><?php echo $text_report_affiliate_commission; ?></a></li>
