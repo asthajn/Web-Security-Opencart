@@ -80,8 +80,8 @@ class ControllerReportCustomerOrder extends Controller {
 $max_referrer = $this->model_report_customer->getReferrer();
 $max_cust = $this->model_report_customer->getMaxCust();
 
-print "The Best customer is : ".$max_cust;
-print "The Best referrer is : ".$max_referrer;
+//print "The Best customer is : ".$max_cust;
+//print "The Best referrer is : ".$max_referrer;
 
 	
 		foreach ($results as $result) {

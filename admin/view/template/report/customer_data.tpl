@@ -155,7 +155,7 @@ ticks: json.yaxis
 }
 			}
 
-			$.plot($('#report'), [json.orders], option);
+			$.plot($('#report'), [json.order], option);
 		}
 	});
 }

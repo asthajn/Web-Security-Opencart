@@ -202,12 +202,12 @@ if (isset($this->request->get['customer_id'])) {
 		switch ($range) {
 			case 'day':
 				for ($i = 0; $i < 24; $i++) {
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "') AND customer_id = '".$cust."' GROUP BY HOUR(date_added) ORDER BY date_added ASC");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "') AND customer_id = '".$cust."' AND order_status_id > 0 GROUP BY HOUR(date_added) ORDER BY date_added ASC");
 					
 					if ($query->num_rows) {
-						$data['orders']['data'][]  = array($i, (int)$query->row['total']);
+						$data['order']['data'][]  = array($i, (int)$query->row['total']);
 					} else {
-						$data['orders']['data'][]  = array($i, 0);
+						$data['order']['data'][]  = array($i, 0);
 					}
 					
 					$data['xaxis'][] = array($i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
@@ -219,12 +219,12 @@ if (isset($this->request->get['customer_id'])) {
 				for ($i = 0; $i < 7; $i++) {
 					$date = date('Y-m-d', $date_start + ($i * 86400));
 
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' AND customer_id = '".$cust."' GROUP BY DATE(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' AND customer_id = '".$cust."' AND order_status_id > 0 GROUP BY DATE(date_added)");
 			
 					if ($query->num_rows) {
-						$data['orders']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = array($i, (int)$query->row['total']);
 					} else {
-						$data['orders']['data'][] = array($i, 0);
+						$data['order']['data'][] = array($i, 0);
 					}
 				
 					$data['xaxis'][] = array($i, date('D', strtotime($date)));
@@ -236,12 +236,12 @@ if (isset($this->request->get['customer_id'])) {
 				for ($i = 1; $i <= date('t'); $i++) {
 					$date = date('Y') . '-' . date('m') . '-' . $i;
 					
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = '" . $this->db->escape($date) . "') AND customer_id = '".$cust."' GROUP BY DAY(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE (DATE(date_added) = '" . $this->db->escape($date) . "') AND customer_id = '".$cust."' AND order_status_id > 0 GROUP BY DAY(date_added)");
 					
 					if ($query->num_rows) {
-						$data['orders']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = array($i, (int)$query->row['total']);
 					} else {
-						$data['orders']['data'][] = array($i, 0);
+						$data['order']['data'][] = array($i, 0);
 					}	
 				
 								
@@ -250,21 +250,21 @@ if (isset($this->request->get['customer_id'])) {
 				break;
 			case 'year':
 				for ($i = 1; $i <= 12; $i++) {
-					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' AND customer_id = '".$cust."' GROUP BY MONTH(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' AND customer_id = '".$cust."' AND order_status_id > 0 GROUP BY MONTH(date_added)");
 //$query = $this->db->query("select count(*) as total from oc_order where MONTH(date_added) = '" . $i . "' AND customer_id = '".$cust."' group by MONTH(date_added)");order_status_id > '" . (int)$this->config->get('config_complete_status_id') . "' AND 
 
 					if ($query->num_rows) {
-						$data['orders']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = array($i, (int)$query->row['total']);
 
 					} else {
-						$data['orders']['data'][] = array($i , 0);
+						$data['order']['data'][] = array($i , 0);
 					}
 					
 				$data['xaxis'][] = array($i, date('M', mktime(0, 0, 0, $i, 1, date('Y'))));
 				}			
 				break;	
 		} 
-$data['yaxis'] = range(0,35);
+$data['yaxis'] = range(0,25);
 		$this->response->setOutput(json_encode($data));
 	}
 	// Chart ended
